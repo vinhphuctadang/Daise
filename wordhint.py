@@ -34,7 +34,6 @@ class trie:
             return None
         return ''.join ([prefix[0], tmp])
     
-    
 def main ():
     mytrie = trie ()
     lst = ['aa', 'aaaa']
