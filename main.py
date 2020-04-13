@@ -10,7 +10,6 @@ from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.styles import Style
 interpreter = None # global interpreter
 
-
 kb = KeyBindings()
 
 @kb.add('escape')
@@ -31,7 +30,9 @@ class Interpreter:
 				+ Auto hint
 	'''
 	def getPromptString(self):
-		return f'Daise {os.getcwd()}$ '
+		return 'Daise %s$ '%(os.getcwd())
+	def getGreetString(self):
+		return 'Terminal wrapper\nDaise version 0.0.1 beta\n---------------------------'
 
 	def loadFilesIntoCompleter(self):
 		root, dirs, files = next(os.walk('.'))
@@ -86,13 +87,14 @@ class Interpreter:
 
 
 	def run(self):
+		print(self.getGreetString())
 		self.loadFilesIntoCompleter()
 		style = Style.from_dict({
-			'ansired': '#0000ff',
+			'b': '#00ff00',
 		})
 		while True:
 			try:
-				text = prompt(HTML(f'<ansired>{self.getPromptString()}</ansired>'), 
+				text = prompt(HTML('<b>%s</b>'%(self.getPromptString())), 
 					style=style,
 					history=self.history,
 					auto_suggest=AutoSuggestFromHistory(),
@@ -106,7 +108,7 @@ class Interpreter:
 			except Exception as e:
 				print('Exception')
 			except KeyboardInterrupt:
-				print('Keyboard interrupted')
+				# print('Keyboard interrupted')
 				pass
 def main():
 	global interpreter
