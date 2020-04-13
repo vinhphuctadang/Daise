@@ -2,7 +2,25 @@ from prompt_toolkit import prompt
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.completion import FuzzyWordCompleter
+from prompt_toolkit.key_binding import KeyBindings
 import os
+
+from prompt_toolkit.shortcuts import print_formatted_text 
+from prompt_toolkit.formatted_text import HTML
+from prompt_toolkit.styles import Style
+interpreter = None # global interpreter
+
+
+kb = KeyBindings()
+
+@kb.add('escape')
+def _(event):
+	'''
+		Escaped is pressed:
+	'''
+
+
+	pass
 
 WordCompleter = FuzzyWordCompleter
 class Interpreter:
@@ -69,14 +87,19 @@ class Interpreter:
 
 	def run(self):
 		self.loadFilesIntoCompleter()
+		style = Style.from_dict({
+			'ansired': '#0000ff',
+		})
 		while True:
 			try:
-				text = prompt(self.getPromptString(), 
+				text = prompt(HTML(f'<ansired>{self.getPromptString()}</ansired>'), 
+					style=style,
 					history=self.history,
 					auto_suggest=AutoSuggestFromHistory(),
 					enable_history_search=True,
 					completer=self.prompt_completer,
-        			complete_while_typing=True,
+					complete_while_typing=True,
+					key_bindings=kb
 				)
 				self.executeCommand(text)
 				self.history.append_string(text)
@@ -86,6 +109,7 @@ class Interpreter:
 				print('Keyboard interrupted')
 				pass
 def main():
+	global interpreter
 	interpreter = Interpreter()
 	interpreter.run()
 if __name__ == "__main__":
